@@ -101,6 +101,12 @@ func (c *Cron) AddFunc(spec string, number int, cmd func()) (int, error) {
 	return c.AddJob(spec, number, FuncJob(cmd))
 }
 
+// Reset the counter of Scheduler
+func (c *Cron) Reset() {
+	c.entries = []*Entry{}
+	c.count = 0
+}
+
 // RemoveFunc removes a func from the Cron referenced by the id.
 func (c *Cron) RemoveFunc(id int) {
 	w := 0 // write index
@@ -277,6 +283,8 @@ func (c *Cron) Stop() {
 	c.stop <- struct{}{}
 	c.running = false
 }
+
+
 
 // entrySnapshot returns a copy of the current cron entry list.
 func (c *Cron) entrySnapshot() []*Entry {
