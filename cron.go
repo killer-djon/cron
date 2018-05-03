@@ -5,6 +5,7 @@ package cron
 import (
 	"sort"
 	"time"
+	"fmt"
 )
 
 // Cron keeps track of any number of entries, invoking the associated func as
@@ -101,11 +102,7 @@ func (c *Cron) AddFunc(spec string, number int, cmd func()) (int, error) {
 	return c.AddJob(spec, number, FuncJob(cmd))
 }
 
-// Reset the counter of Scheduler
-func (c *Cron) Reset() {
-	c.entries = []*Entry{}
-	c.count = 0
-}
+
 
 // RemoveFunc removes a func from the Cron referenced by the id.
 func (c *Cron) RemoveFunc(id int) {
@@ -166,7 +163,7 @@ func (c *Cron) EntryById(id int) *Entry {
 // AddFunc adds a Job to the Cron to be run on the given schedule.
 func (c *Cron) AddJob(spec string, number int, cmd Job) (int, error) {
 	cronJob := c.EntryById(number)
-	if ( cronJob != nil ) {
+	if ( cronJob != nil && (cronJob.Status == 0 || cronJob.Status == 1) ) {
 		c.RemoveFunc(number)
 		c.count--
 	}
@@ -223,6 +220,14 @@ func (c *Cron) Start() {
 	}
 	c.running = true
 	go c.run()
+}
+
+// Reset the counter of Scheduler
+func (c *Cron) Reset() {
+	c.entries = []*Entry{}
+	c.count = 0
+
+	fmt.Printf("Cron will be reset = %v\n", c)
 }
 
 // Run the scheduler.. this is private just due to the need to synchronize
