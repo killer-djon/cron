@@ -115,6 +115,7 @@ func (c *Cron) RemoveFunc(id int) {
 		w++
 	}
 	c.entries = c.entries[:w]
+	c.count = len(c.entries)
 }
 
 func (c *Cron) PauseFunc(id int) {
