@@ -163,6 +163,12 @@ func (c *Cron) EntryById(id int) *Entry {
 
 // AddFunc adds a Job to the Cron to be run on the given schedule.
 func (c *Cron) AddJob(spec string, number int, cmd Job) (int, error) {
+	cronJob := c.EntryById(number)
+	if ( cronJob != nil && (cronJob.Status == 0 || cronJob.Status == 1) ) {
+		c.RemoveFunc(number)
+		c.count--
+	}
+
 	schedule, err := Parse(spec)
 	if err != nil {
 		return -1, err
