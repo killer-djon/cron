@@ -236,7 +236,7 @@ func (c *Cron) Reset() {
 func (c *Cron) run() {
 	for {
 		// Figure out the next activation times for each entry.
-		now := time.Now().UTC()
+		now := time.Now()
 		for _, entry := range c.entries {
 			entry.Next = entry.Schedule.Next(now)
 		}
